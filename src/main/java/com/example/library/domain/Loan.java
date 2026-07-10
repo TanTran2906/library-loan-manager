@@ -10,6 +10,7 @@ public class Loan {
     private LocalDate borrowedAt;
     private LocalDate dueAt;
     private LocalDate returnedAt;
+    private Member member;
 
     public Long getId() {
         return id;
@@ -57,5 +58,13 @@ public class Loan {
 
     public void setReturnedAt(LocalDate returnedAt) {
         this.returnedAt = returnedAt;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 }

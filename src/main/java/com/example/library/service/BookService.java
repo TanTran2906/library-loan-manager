@@ -1,0 +1,114 @@
+package com.example.library.service;
+
+import com.example.library.domain.Book;
+import com.example.library.domain.Loan;
+import com.example.library.dto.BookDetailView;
+import com.example.library.dto.BookForm;
+import com.example.library.dto.BookSummary;
+import com.example.library.dto.LoanRow;
+import com.example.library.mapper.BookMapper;
+import com.example.library.mapper.LoanMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+@Service
+public class BookService {
+
+    private final BookMapper bookMapper;
+    private final LoanMapper loanMapper;
+
+    public BookService(BookMapper bookMapper, LoanMapper loanMapper) {
+        this.bookMapper = bookMapper;
+        this.loanMapper = loanMapper;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookSummary> findAll(String keyword) {
+        return bookMapper.findAll(keyword).stream()
+                .map(book -> new BookSummary(
+                        book.getId(),
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.getTotalCopies()))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public BookDetailView getDetail(Long id) {
+        Book book = loanMapper.findBookWithLoansById(id);
+        if (book == null) {
+            throw new NoSuchElementException("No book with id " + id);
+        }
+
+        LocalDate today = LocalDate.now();
+        List<Loan> loans = book.getLoans();
+
+        long onLoan = loans.stream().filter(loan -> loan.getReturnedAt() == null).count();
+        int availableCopies = (int) (book.getTotalCopies() - onLoan);
+
+        List<LoanRow> loanRows = loans.stream()
+                .map(loan -> new LoanRow(
+                        loan.getId(),
+                        loan.getMember().getFullName(),
+                        loan.getBorrowedAt(),
+                        loan.getDueAt(),
+                        loan.getReturnedAt(),
+                        loan.getReturnedAt() == null && loan.getDueAt().isBefore(today)))
+                .collect(Collectors.toList());
+
+        return new BookDetailView(
+                book.getId(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getIsbn(),
+                book.getPublishedYear(),
+                book.getTotalCopies(),
+                availableCopies,
+                loanRows);
+    }
+
+    @Transactional(readOnly = true)
+    public BookForm getForm(Long id) {
+        Book book = bookMapper.findById(id);
+        if (book == null) {
+            throw new NoSuchElementException("No book with id " + id);
+        }
+        BookForm form = new BookForm();
+        form.setId(book.getId());
+        form.setTitle(book.getTitle());
+        form.setAuthor(book.getAuthor());
+        form.setIsbn(book.getIsbn());
+        form.setPublishedYear(book.getPublishedYear());
+        form.setTotalCopies(book.getTotalCopies());
+        return form;
+    }
+
+    @Transactional
+    public Long create(BookForm form) {
+        Book book = new Book();
+        book.setTitle(form.getTitle());
+        book.setAuthor(form.getAuthor());
+        book.setIsbn(form.getIsbn());
+        book.setPublishedYear(form.getPublishedYear());
+        book.setTotalCopies(form.getTotalCopies());
+        bookMapper.insert(book);
+        return book.getId();
+    }
+
+    @Transactional
+    public void update(Long id, BookForm form) {
+        Book book = new Book();
+        book.setId(id);
+        book.setTitle(form.getTitle());
+        book.setAuthor(form.getAuthor());
+        book.setIsbn(form.getIsbn());
+        book.setPublishedYear(form.getPublishedYear());
+        book.setTotalCopies(form.getTotalCopies());
+        bookMapper.update(book);
+    }
+}

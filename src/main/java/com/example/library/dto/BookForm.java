@@ -1,18 +1,27 @@
-package com.example.library.domain;
+package com.example.library.dto;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-public class Book {
+public class BookForm {
 
     private Long id;
+
+    @NotBlank
     private String title;
+
+    @NotBlank
     private String author;
+
+    @NotBlank
     private String isbn;
+
     private Integer publishedYear;
+
+    @NotNull
+    @Min(1)
     private Integer totalCopies;
-    private LocalDateTime createdAt;
-    private List<Loan> loans;
 
     public Long getId() {
         return id;
@@ -60,21 +69,5 @@ public class Book {
 
     public void setTotalCopies(Integer totalCopies) {
         this.totalCopies = totalCopies;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public List<Loan> getLoans() {
-        return loans;
-    }
-
-    public void setLoans(List<Loan> loans) {
-        this.loans = loans;
     }
 }

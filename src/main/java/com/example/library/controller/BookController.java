@@ -1,0 +1,67 @@
+package com.example.library.controller;
+
+import com.example.library.dto.BookForm;
+import com.example.library.service.BookService;
+import jakarta.validation.Valid;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+@RequestMapping("/books")
+public class BookController {
+
+    private final BookService bookService;
+
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    @GetMapping
+    public String list(@RequestParam(required = false) String keyword, Model model) {
+        model.addAttribute("books", bookService.findAll(keyword));
+        return "books/list";
+    }
+
+    @GetMapping("/{id}")
+    public String detail(@PathVariable Long id, Model model) {
+        model.addAttribute("book", bookService.getDetail(id));
+        return "books/detail";
+    }
+
+    @GetMapping("/new")
+    public String newForm(Model model) {
+        model.addAttribute("form", new BookForm());
+        return "books/form";
+    }
+
+    @PostMapping
+    public String create(@Valid @ModelAttribute("form") BookForm form, BindingResult result) {
+        if (result.hasErrors()) {
+            return "books/form";
+        }
+        Long id = bookService.create(form);
+        return "redirect:/books/" + id;
+    }
+
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("form", bookService.getForm(id));
+        return "books/form";
+    }
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable Long id, @Valid @ModelAttribute("form") BookForm form, BindingResult result) {
+        if (result.hasErrors()) {
+            return "books/form";
+        }
+        bookService.update(id, form);
+        return "redirect:/books/" + id;
+    }
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.library.mapper.LoanMapper">
+
+    <!--
+      One query, one round trip: book + every loan + the borrowing member.
+      LEFT JOINs so a never-loaned book still returns its row (loans stays empty
+      because MyBatis skips a <collection> element whose <id> column is null).
+    -->
+    <resultMap id="bookWithLoansResultMap" type="com.example.library.domain.Book">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="author" column="author"/>
+        <result property="isbn" column="isbn"/>
+        <result property="publishedYear" column="published_year"/>
+        <result property="totalCopies" column="total_copies"/>
+        <result property="createdAt" column="created_at"/>
+        <collection property="loans" ofType="com.example.library.domain.Loan">
+            <id property="id" column="loan_id"/>
+            <result property="borrowedAt" column="borrowed_at"/>
+            <result property="dueAt" column="due_at"/>
+            <result property="returnedAt" column="returned_at"/>
+            <association property="member" javaType="com.example.library.domain.Member">
+                <id property="id" column="member_id"/>
+                <result property="fullName" column="member_full_name"/>
+                <result property="email" column="member_email"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="findBookWithLoansById" resultMap="bookWithLoansResultMap">
+        SELECT b.id, b.title, b.author, b.isbn, b.published_year, b.total_copies, b.created_at,
+               l.id AS loan_id, l.borrowed_at, l.due_at, l.returned_at,
+               m.id AS member_id, m.full_name AS member_full_name, m.email AS member_email
+        FROM book b
+        LEFT JOIN loan l ON l.book_id = b.id
+        LEFT JOIN member m ON m.id = l.member_id
+        WHERE b.id = #{bookId}
+        ORDER BY l.borrowed_at DESC
+    </select>
+
+</mapper>
