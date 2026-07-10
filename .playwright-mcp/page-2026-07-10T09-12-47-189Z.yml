@@ -1,0 +1,31 @@
+- generic [active] [ref=f14e1]:
+  - banner [ref=f14e2]:
+    - link "Library" [ref=f14e3] [cursor=pointer]:
+      - /url: /
+  - main [ref=f14e4]:
+    - link "← Back" [ref=f14e5] [cursor=pointer]:
+      - /url: /books
+    - heading "Add book" [level=1] [ref=f14e6]
+    - generic [ref=f14e7]:
+      - generic [ref=f14e8]:
+        - generic [ref=f14e9]: Title
+        - textbox "Title" [ref=f14e10]: Clean Code (dup test)
+      - generic [ref=f14e11]:
+        - generic [ref=f14e12]: Author
+        - textbox "Author" [ref=f14e13]: Robert C. Martin
+      - generic [ref=f14e14]:
+        - generic [ref=f14e15]: ISBN
+        - textbox "ISBN" [ref=f14e16]: "9780132350884"
+        - alert [ref=f14e17]: A book with this ISBN already exists.
+      - generic [ref=f14e18]:
+        - generic [ref=f14e19]: Published year optional
+        - spinbutton "Published year optional" [ref=f14e20]: "2008"
+      - generic [ref=f14e21]:
+        - generic [ref=f14e22]: Total copies
+        - spinbutton "Total copies" [ref=f14e23]: "2"
+      - generic [ref=f14e24]:
+        - link "Cancel" [ref=f14e25] [cursor=pointer]:
+          - /url: /books
+        - button "Save" [ref=f14e26] [cursor=pointer]
+  - contentinfo [ref=f14e27]:
+    - paragraph [ref=f14e28]: Library — internal loan records.

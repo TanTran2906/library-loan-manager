@@ -1,0 +1,30 @@
+- generic [active] [ref=f12e1]:
+  - banner [ref=f12e2]:
+    - link "Library" [ref=f12e3] [cursor=pointer]:
+      - /url: /
+  - main [ref=f12e4]:
+    - link "← Back" [ref=f12e5] [cursor=pointer]:
+      - /url: /books
+    - heading "Add book" [level=1] [ref=f12e6]
+    - generic [ref=f12e7]:
+      - generic [ref=f12e8]:
+        - generic [ref=f12e9]: Title
+        - textbox "Title" [ref=f12e10]
+      - generic [ref=f12e11]:
+        - generic [ref=f12e12]: Author
+        - textbox "Author" [ref=f12e13]
+      - generic [ref=f12e14]:
+        - generic [ref=f12e15]: ISBN
+        - textbox "ISBN" [ref=f12e16]
+      - generic [ref=f12e17]:
+        - generic [ref=f12e18]: Published year optional
+        - spinbutton "Published year optional" [ref=f12e19]
+      - generic [ref=f12e20]:
+        - generic [ref=f12e21]: Total copies
+        - spinbutton "Total copies" [ref=f12e22]
+      - generic [ref=f12e23]:
+        - link "Cancel" [ref=f12e24] [cursor=pointer]:
+          - /url: /books
+        - button "Save" [ref=f12e25] [cursor=pointer]
+  - contentinfo [ref=f12e26]:
+    - paragraph [ref=f12e27]: Library — internal loan records.

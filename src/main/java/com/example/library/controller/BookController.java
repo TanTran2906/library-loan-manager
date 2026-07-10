@@ -2,6 +2,7 @@ package com.example.library.controller;
 
 import com.example.library.dto.BookForm;
 import com.example.library.service.BookService;
+import com.example.library.service.DuplicateIsbnException;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/books")
@@ -43,12 +45,19 @@ public class BookController {
     }
 
     @PostMapping
-    public String create(@Valid @ModelAttribute("form") BookForm form, BindingResult result) {
+    public String create(@Valid @ModelAttribute("form") BookForm form, BindingResult result,
+                         RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "books/form";
         }
-        Long id = bookService.create(form);
-        return "redirect:/books/" + id;
+        try {
+            Long id = bookService.create(form);
+            redirectAttributes.addFlashAttribute("flash", "“" + form.getTitle() + "” has been added.");
+            return "redirect:/books/" + id;
+        } catch (DuplicateIsbnException e) {
+            result.rejectValue("isbn", "duplicate", "A book with this ISBN already exists.");
+            return "books/form";
+        }
     }
 
     @GetMapping("/{id}/edit")
@@ -58,11 +67,18 @@ public class BookController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable Long id, @Valid @ModelAttribute("form") BookForm form, BindingResult result) {
+    public String update(@PathVariable Long id, @Valid @ModelAttribute("form") BookForm form, BindingResult result,
+                         RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "books/form";
         }
-        bookService.update(id, form);
-        return "redirect:/books/" + id;
+        try {
+            bookService.update(id, form);
+            redirectAttributes.addFlashAttribute("flash", "Changes to “" + form.getTitle() + "” have been saved.");
+            return "redirect:/books/" + id;
+        } catch (DuplicateIsbnException e) {
+            result.rejectValue("isbn", "duplicate", "A book with this ISBN already exists.");
+            return "books/form";
+        }
     }
 }

@@ -1,0 +1,29 @@
+- generic [active] [ref=f16e1]:
+  - banner [ref=f16e2]:
+    - link "Library" [ref=f16e3] [cursor=pointer]:
+      - /url: /
+  - main [ref=f16e4]:
+    - link "← Books" [ref=f16e5] [cursor=pointer]:
+      - /url: /books
+    - generic [ref=f16e6]:
+      - generic [ref=f16e7]:
+        - heading "The Verified Book" [level=1] [ref=f16e8]
+        - paragraph [ref=f16e9]: Robert C. Martin
+        - generic [ref=f16e10]: Available
+      - link "Edit" [ref=f16e11] [cursor=pointer]:
+        - /url: /books/33/edit
+    - generic [ref=f16e12]:
+      - generic [ref=f16e13]:
+        - term [ref=f16e14]: ISBN
+        - definition [ref=f16e15]: "9781234567897"
+      - generic [ref=f16e16]:
+        - term [ref=f16e17]: Published
+        - definition [ref=f16e18]: "2008"
+      - generic [ref=f16e19]:
+        - term [ref=f16e20]: Copies
+        - definition [ref=f16e21]: 2 / 2
+    - generic [ref=f16e22]:
+      - heading "Loan history" [level=2] [ref=f16e23]
+      - paragraph [ref=f16e25]: This book hasn’t been borrowed yet.
+  - contentinfo [ref=f16e26]:
+    - paragraph [ref=f16e27]: Library — internal loan records.

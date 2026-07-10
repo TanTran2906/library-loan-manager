@@ -2,9 +2,66 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Book form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${form.id == null} ? 'Add book' : 'Edit book'">Book form</title>
+    <link rel="stylesheet" th:href="@{/css/tokens.css}"/>
+    <link rel="stylesheet" th:href="@{/css/primitives.css}"/>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
 </head>
 <body>
-<!-- placeholder: form screen UI comes in a later session -->
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main data-page="books-form">
+    <a class="btn" data-variant="ghost"
+       th:href="${form.id == null} ? @{/books} : @{/books/{id}(id=${form.id})}">&larr; Back</a>
+
+    <h1 data-page-title th:text="${form.id == null} ? 'Add book' : 'Edit book'">Add book</h1>
+
+    <form method="post" th:object="${form}"
+          th:action="${form.id == null} ? @{/books} : @{/books/{id}(id=${form.id})}">
+        <input type="hidden" th:field="*{id}"/>
+
+        <div class="field" th:attr="data-invalid=${#fields.hasErrors('title')}">
+            <label for="title">Title</label>
+            <input class="input" type="text" id="title" th:field="*{title}" autocomplete="off"/>
+            <span role="alert" th:errors="*{title}">Title error</span>
+        </div>
+
+        <div class="field" th:attr="data-invalid=${#fields.hasErrors('author')}">
+            <label for="author">Author</label>
+            <input class="input" type="text" id="author" th:field="*{author}" autocomplete="off"/>
+            <span role="alert" th:errors="*{author}">Author error</span>
+        </div>
+
+        <div class="field" th:attr="data-invalid=${#fields.hasErrors('isbn')}">
+            <label for="isbn">ISBN</label>
+            <input class="input" type="text" id="isbn" th:field="*{isbn}"
+                   inputmode="numeric" autocomplete="off"/>
+            <span role="alert" th:errors="*{isbn}">ISBN error</span>
+        </div>
+
+        <div class="field" th:attr="data-invalid=${#fields.hasErrors('publishedYear')}">
+            <label for="publishedYear">Published year <span data-optional>optional</span></label>
+            <input class="input" type="number" id="publishedYear" th:field="*{publishedYear}"
+                   inputmode="numeric" min="1450" max="2100"/>
+            <span role="alert" th:errors="*{publishedYear}">Year error</span>
+        </div>
+
+        <div class="field" th:attr="data-invalid=${#fields.hasErrors('totalCopies')}">
+            <label for="totalCopies">Total copies</label>
+            <input class="input" type="number" id="totalCopies" th:field="*{totalCopies}"
+                   inputmode="numeric" min="1"/>
+            <span role="alert" th:errors="*{totalCopies}">Copies error</span>
+        </div>
+
+        <div data-form-actions>
+            <a class="btn" data-variant="ghost"
+               th:href="${form.id == null} ? @{/books} : @{/books/{id}(id=${form.id})}">Cancel</a>
+            <button class="btn" data-variant="primary" type="submit">Save</button>
+        </div>
+    </form>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
 </body>
 </html>

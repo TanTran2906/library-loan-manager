@@ -9,6 +9,7 @@ import com.example.library.dto.LibraryStats;
 import com.example.library.dto.LoanRow;
 import com.example.library.mapper.BookMapper;
 import com.example.library.mapper.LoanMapper;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,7 +104,11 @@ public class BookService {
         book.setIsbn(form.getIsbn());
         book.setPublishedYear(form.getPublishedYear());
         book.setTotalCopies(form.getTotalCopies());
-        bookMapper.insert(book);
+        try {
+            bookMapper.insert(book);
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateIsbnException(form.getIsbn(), e);
+        }
         return book.getId();
     }
 
@@ -116,6 +121,10 @@ public class BookService {
         book.setIsbn(form.getIsbn());
         book.setPublishedYear(form.getPublishedYear());
         book.setTotalCopies(form.getTotalCopies());
-        bookMapper.update(book);
+        try {
+            bookMapper.update(book);
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateIsbnException(form.getIsbn(), e);
+        }
     }
 }

@@ -12,6 +12,8 @@
 <div th:replace="~{fragments/layout :: header}"></div>
 
 <main data-page="books-detail">
+    <div class="alert" role="status" th:if="${flash != null}" th:text="${flash}">Saved.</div>
+
     <a class="btn" data-variant="ghost" th:href="@{/books}">&larr; Books</a>
 
     <header data-book-header>

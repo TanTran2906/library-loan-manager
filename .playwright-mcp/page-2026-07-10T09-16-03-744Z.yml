@@ -1,0 +1,16 @@
+- generic [active] [ref=f20e1]:
+  - banner [ref=f20e2]:
+    - link "Library" [ref=f20e3] [cursor=pointer]:
+      - /url: /
+  - main [ref=f20e4]:
+    - heading "Books" [level=1] [ref=f20e5]
+    - generic [ref=f20e6]:
+      - searchbox "Search books" [ref=f20e8]: zzz-no-such-book
+      - link "Add book" [ref=f20e9] [cursor=pointer]:
+        - /url: /books/new
+    - generic [ref=f20e10]:
+      - paragraph [ref=f20e11]: No books match “zzz-no-such-book”.
+      - link "Add book" [ref=f20e12] [cursor=pointer]:
+        - /url: /books/new
+  - contentinfo [ref=f20e13]:
+    - paragraph [ref=f20e14]: Library — internal loan records.
