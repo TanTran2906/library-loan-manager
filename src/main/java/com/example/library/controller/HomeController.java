@@ -14,9 +14,13 @@ public class HomeController {
         this.bookService = bookService;
     }
 
+    /** How many catalogue rows the hero previews before the "Browse" CTA. */
+    private static final int HERO_PREVIEW_ROWS = 8;
+
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("stats", bookService.getStats());
+        model.addAttribute("books", bookService.findPreview(HERO_PREVIEW_ROWS));
         return "index";
     }
 }

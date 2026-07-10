@@ -13,24 +13,48 @@
     <section data-hero>
         <h1>Every book, accounted for.</h1>
 
-        <div data-stats>
-            <article class="card">
-                <p data-stat-value th:text="${stats.totalBooks}">25</p>
-                <p data-stat-label>Books in the collection</p>
-            </article>
-            <article class="card">
-                <p data-stat-value th:text="${stats.onLoan}">7</p>
-                <p data-stat-label>On loan</p>
-            </article>
-            <article class="card">
-                <p data-stat-value
-                   th:attr="data-state=${stats.overdue > 0 ? 'overdue' : null}"
-                   th:text="${stats.overdue}">3</p>
-                <p data-stat-label>Overdue</p>
-            </article>
-        </div>
+        <p data-hero-stats>
+            <span>
+                <span data-stat-value th:text="${stats.totalBooks}">25</span>
+                <span data-stat-label>in the collection</span>
+            </span>
+            <span>
+                <span data-stat-value th:text="${stats.onLoan}">7</span>
+                <span data-stat-label>on loan</span>
+            </span>
+            <span>
+                <span data-stat-value
+                      th:attr="data-state=${stats.overdue > 0 ? 'overdue' : null}"
+                      th:text="${stats.overdue}">3</span>
+                <span data-stat-label>overdue</span>
+            </span>
+        </p>
 
         <a class="btn" data-variant="primary" th:href="@{/books}" href="/books">Browse the catalogue</a>
+
+        <table class="table" th:if="${not #lists.isEmpty(books)}">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th data-numeric>Available</th>
+                <th>ISBN</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="book : ${books}">
+                <td data-cell="title">
+                    <a th:href="@{/books/{id}(id=${book.id})}" th:text="${book.title}">Title</a>
+                    <span data-muted th:text="${book.author}">Author</span>
+                </td>
+                <td>
+                    <span class="badge" th:attr="data-state=${book.status}" th:text="${book.statusLabel}">Available</span>
+                </td>
+                <td data-numeric th:text="${book.availableCopies} + ' / ' + ${book.totalCopies}">3 / 4</td>
+                <td data-muted th:text="${book.isbn}">ISBN</td>
+            </tr>
+            </tbody>
+        </table>
     </section>
 </main>
 </body>

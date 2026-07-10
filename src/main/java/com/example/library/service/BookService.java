@@ -42,6 +42,14 @@ public class BookService {
         return bookMapper.findAll(keyword, LocalDate.now());
     }
 
+    /** A short slice of the catalogue for the hero preview table. */
+    @Transactional(readOnly = true)
+    public List<BookSummary> findPreview(int limit) {
+        return bookMapper.findAll(null, LocalDate.now()).stream()
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
     @Transactional(readOnly = true)
     public BookDetailView getDetail(Long id) {
         Book book = loanMapper.findBookWithLoansById(id);

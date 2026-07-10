@@ -33,15 +33,18 @@
     line-height: var(--leading-normal);
     color: var(--text-primary);
     background: var(--surface-0);
+    /* Fraunces is variable — size-match the optical axis automatically. */
+    font-optical-sizing: auto;
   }
 
   /* Hero (/) — the only screen with drama. One positioning line, three
      live stats (data as the hero), one CTA. -------------------------- */
   [data-page="home"] {
     display: grid;
-    place-items: center;
+    justify-items: center;
+    align-content: start;
     min-height: 100vh;
-    padding: var(--space-7) var(--space-4);
+    padding: var(--space-9) var(--space-4) var(--space-8);
   }
 
   [data-hero] {
@@ -50,7 +53,7 @@
     align-items: center;
     gap: var(--space-6);
     width: 100%;
-    max-width: 56rem;
+    max-width: 60rem;
     text-align: center;
   }
 
@@ -64,18 +67,19 @@
     text-wrap: balance;
   }
 
-  /* Three stats — a responsive grid of primitive cards. */
-  [data-stats] {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-4);
-    width: 100%;
+  /* Three stats — inline figures under the headline, not boxed cards. */
+  [data-hero-stats] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: baseline;
+    gap: var(--space-2) var(--space-6);
+    margin: 0;
   }
 
-  [data-page="home"] .card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  [data-hero-stats] > span {
+    display: inline-flex;
+    align-items: baseline;
     gap: var(--space-2);
   }
 
@@ -98,14 +102,19 @@
     color: var(--text-muted);
   }
 
-  /* Stack the stats below the tablet breakpoint. */
-  @media (max-width: 40rem) {
-    [data-stats] {
-      grid-template-columns: 1fr;
-    }
+  /* The catalogue preview IS the hero surface — reset the inherited centre
+     alignment so the table reads like the real list. */
+  [data-hero] .table {
+    text-align: start;
+  }
 
+  @media (max-width: 40rem) {
     [data-hero] {
       gap: var(--space-5);
+    }
+
+    [data-hero-stats] {
+      gap: var(--space-2) var(--space-4);
     }
   }
 
@@ -190,23 +199,27 @@
 
   /* Title cell carries two lines (title + muted author), so the fixed
      40px row height gives way to a comfortable min-height here. */
-  [data-page="books-list"] .table tbody td {
+  [data-page="books-list"] .table tbody td,
+  [data-page="home"] .table tbody td {
     height: auto;
     min-height: var(--size-row);
     padding-block: var(--space-2);
   }
 
-  [data-page="books-list"] td[data-cell="title"] {
+  [data-page="books-list"] td[data-cell="title"],
+  [data-page="home"] td[data-cell="title"] {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
   }
 
-  [data-page="books-list"] td[data-cell="title"] a {
+  [data-page="books-list"] td[data-cell="title"] a,
+  [data-page="home"] td[data-cell="title"] a {
     font-weight: var(--weight-medium);
   }
 
-  [data-page="books-list"] td[data-cell="title"] [data-muted] {
+  [data-page="books-list"] td[data-cell="title"] [data-muted],
+  [data-page="home"] td[data-cell="title"] [data-muted] {
     font-size: var(--text-xs);
   }
 
