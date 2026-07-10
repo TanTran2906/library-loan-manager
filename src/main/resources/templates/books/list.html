@@ -2,9 +2,57 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Books</title>
+    <link rel="stylesheet" th:href="@{/css/tokens.css}"/>
+    <link rel="stylesheet" th:href="@{/css/primitives.css}"/>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
 </head>
 <body>
-<!-- placeholder: list screen UI comes in a later session -->
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main data-page="books-list">
+    <h1 data-page-title>Books</h1>
+
+    <div data-toolbar>
+        <form method="get" th:action="@{/books}" data-search>
+            <input class="input" type="search" name="q" placeholder="Search title or author"
+                   th:value="${q}" aria-label="Search books"/>
+        </form>
+        <a class="btn" data-variant="primary" th:href="@{/books/new}">Add book</a>
+    </div>
+
+    <table class="table" th:if="${not #lists.isEmpty(books)}">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th data-numeric>Available</th>
+            <th>ISBN</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td data-cell="title">
+                <a th:href="@{/books/{id}(id=${book.id})}" th:text="${book.title}">Title</a>
+                <span data-muted th:text="${book.author}">Author</span>
+            </td>
+            <td>
+                <span class="badge" th:attr="data-state=${book.status}" th:text="${book.statusLabel}">Available</span>
+            </td>
+            <td data-numeric th:text="${book.availableCopies} + ' / ' + ${book.totalCopies}">3 / 4</td>
+            <td data-muted th:text="${book.isbn}">ISBN</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="empty" th:if="${#lists.isEmpty(books)}">
+        <p th:if="${q != null and !q.isEmpty()}" th:text="'No books match “' + ${q} + '”.'">No matches</p>
+        <p th:unless="${q != null and !q.isEmpty()}">No books yet.</p>
+        <a class="btn" data-variant="primary" th:href="@{/books/new}">Add book</a>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
 </body>
 </html>

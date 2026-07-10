@@ -1,11 +1,13 @@
 package com.example.library.mapper;
 
 import com.example.library.domain.Book;
+import com.example.library.dto.BookSummary;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,16 +26,16 @@ class BookMapperTest {
 
     @Test
     void findAllWithoutKeywordReturnsEverySeededBook() {
-        List<Book> books = bookMapper.findAll(null);
+        List<BookSummary> books = bookMapper.findAll(null, LocalDate.now());
 
         assertThat(books).hasSize(25);
     }
 
     @Test
     void findAllWithKeywordFiltersByTitleOrAuthor() {
-        List<Book> books = bookMapper.findAll("Clean");
+        List<BookSummary> books = bookMapper.findAll("Clean", LocalDate.now());
 
-        assertThat(books).extracting(Book::getTitle).containsExactly("Clean Code");
+        assertThat(books).extracting(BookSummary::getTitle).containsExactly("Clean Code");
     }
 
     @Test

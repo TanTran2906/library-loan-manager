@@ -5,6 +5,7 @@ import com.example.library.domain.Loan;
 import com.example.library.dto.BookDetailView;
 import com.example.library.dto.BookForm;
 import com.example.library.dto.BookSummary;
+import com.example.library.dto.LibraryStats;
 import com.example.library.dto.LoanRow;
 import com.example.library.mapper.BookMapper;
 import com.example.library.mapper.LoanMapper;
@@ -28,14 +29,16 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
+    public LibraryStats getStats() {
+        long totalBooks = bookMapper.countAll();
+        long onLoan = loanMapper.countOnLoan();
+        long overdue = loanMapper.countOverdue(LocalDate.now());
+        return new LibraryStats(totalBooks, onLoan, overdue);
+    }
+
+    @Transactional(readOnly = true)
     public List<BookSummary> findAll(String keyword) {
-        return bookMapper.findAll(keyword).stream()
-                .map(book -> new BookSummary(
-                        book.getId(),
-                        book.getTitle(),
-                        book.getAuthor(),
-                        book.getTotalCopies()))
-                .collect(Collectors.toList());
+        return bookMapper.findAll(keyword, LocalDate.now());
     }
 
     @Transactional(readOnly = true)
@@ -61,6 +64,9 @@ public class BookService {
                         loan.getReturnedAt() == null && loan.getDueAt().isBefore(today)))
                 .collect(Collectors.toList());
 
+        boolean anyOverdue = loanRows.stream().anyMatch(LoanRow::isOverdue);
+        String status = anyOverdue ? "overdue" : (availableCopies <= 0 ? "on-loan" : "available");
+
         return new BookDetailView(
                 book.getId(),
                 book.getTitle(),
@@ -69,6 +75,7 @@ public class BookService {
                 book.getPublishedYear(),
                 book.getTotalCopies(),
                 availableCopies,
+                status,
                 loanRows);
     }
 

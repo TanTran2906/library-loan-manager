@@ -2,9 +2,72 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Book detail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${book.title}">Book detail</title>
+    <link rel="stylesheet" th:href="@{/css/tokens.css}"/>
+    <link rel="stylesheet" th:href="@{/css/primitives.css}"/>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
 </head>
 <body>
-<!-- placeholder: detail screen UI comes in a later session -->
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main data-page="books-detail">
+    <a class="btn" data-variant="ghost" th:href="@{/books}">&larr; Books</a>
+
+    <header data-book-header>
+        <div data-book-heading>
+            <h1 th:text="${book.title}">Title</h1>
+            <p data-muted th:text="${book.author}">Author</p>
+            <span class="badge" th:attr="data-state=${book.status}" th:text="${book.statusLabel}">Available</span>
+        </div>
+        <a class="btn" data-variant="primary" th:href="@{/books/{id}/edit(id=${book.id})}">Edit</a>
+    </header>
+
+    <dl data-facts>
+        <div>
+            <dt>ISBN</dt>
+            <dd th:text="${book.isbn}">ISBN</dd>
+        </div>
+        <div>
+            <dt>Published</dt>
+            <dd th:text="${book.publishedYear != null ? book.publishedYear : '—'}">Year</dd>
+        </div>
+        <div>
+            <dt>Copies</dt>
+            <dd th:text="${book.availableCopies} + ' / ' + ${book.totalCopies}">3 / 4</dd>
+        </div>
+    </dl>
+
+    <section data-loans>
+        <h2>Loan history</h2>
+
+        <table class="table" th:if="${not #lists.isEmpty(book.loans)}">
+            <thead>
+            <tr>
+                <th>Member</th>
+                <th>Borrowed</th>
+                <th>Due</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="loan : ${book.loans}">
+                <td th:text="${loan.memberFullName}">Member</td>
+                <td th:text="${loan.borrowedAt}">2026-01-01</td>
+                <td th:text="${loan.dueAt}">2026-01-15</td>
+                <td>
+                    <span class="badge" th:attr="data-state=${loan.status}" th:text="${loan.statusLabel}">On loan</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="empty" th:if="${#lists.isEmpty(book.loans)}">
+            <p>This book hasn&rsquo;t been borrowed yet.</p>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
 </body>
 </html>

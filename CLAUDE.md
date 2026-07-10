@@ -37,13 +37,66 @@ Anything else is out of scope — say so instead of building it.
 ## Design rules
 
 - FORBIDDEN fonts: Inter, Roboto, Open Sans, Lato, Arial, system-ui stacks.
-- Display font + body font, weight extremes (300 vs 700), size jumps 3x+ not 1.5x.
+- Hero display ≥ 3x body. List/detail/form: 1.5–1.8x. Drama chỉ ở "/" Weight extremes (300 vs 700) chỉ ở hero. Trong table không bao giờ < 400.
 - ONE dominant colour + ONE accent. No purple-to-blue gradient on white.
 - Surface elevation via 4 CSS vars (:-surface-0 :. :-surface-3).
-  Separate cards by contrast, NOT by borders.
+- Separate surfaces by contrast. Rows divided by 1px hairline only. No border around a card. No zebra striping.
 - 8px spacing rhythm. Input font-size := 16px (mobile auto-zoom).
 - No three-centered-rounded-card hero. No emoji in the UI.
-- Every list screen ships loading / empty / error states. Every form ships field-level errors.
+- Server-rendered: no loading state. Every list screen ships empty + error. Every form ships field-level errors.
+
+## Design spec (locked 2026-07-10, Refero audit)
+
+Direction: editorial. A ledger, not a dashboard.
+
+Fonts (self-host woff2):
+
+- Display serif: Fraunces — hero + page titles only.
+- Body/UI/table: IBM Plex Sans — has real tabular figures.
+
+Type scale (tokens.css):
+--text-xs 0.75rem timestamps, muted meta
+--text-sm 0.8125rem TABLE BODY default
+--text-base 1rem form inputs, detail body
+--text-lg 1.5rem list/section titles
+--text-xl 2rem detail page title
+--text-display 3.5rem HERO ONLY
+
+Colour: one warm-neutral ink (not #000) + one accent (CTA + focus ring only).
+Warm-paper neutrals, not cool grey. Semantic colours are badge/text only:
+--state-available (green) · --state-on-loan (neutral) · --state-overdue (red).
+Red appears only when something is wrong.
+
+Numbers: font-variant-numeric: tabular-nums, right-aligned. Text left-aligned.
+Never centre a data column. ISBN uses tabular-nums, not a mono family.
+
+Spacing: 8px base, 4px sub-grid inside tables.
+Row 40px · header row 32px · cell pad 8px/12px · toolbar 48px.
+Block gap 24–32px in app screens. Hero sections 64–96px.
+
+Surfaces:
+--surface-0 app canvas (warm off-white) · --surface-1 table/card
+--surface-2 hover row · --surface-3 sunken: table header, toolbar
+Exactly one shadow token, floating layers only (<dialog>, popover, toast).
+
+Hero (/): the book table IS the hero (Attio pattern). One positioning line,
+three stats, one CTA. This is the only screen with drama.
+
+List (/books): search box + one primary "Add book". No filter rail, no sort,
+no row menu, no pagination footer. Columns: title (link) + author (muted,
+second line) · status badge · available/total (right-aligned) · isbn (muted).
+Hairline dividers, hover highlight, sticky header.
+
+Detail (/books/{id}): serif title + author + status badge. Facts column.
+Loans as a compact sub-table reusing the same table primitives.
+
+Form: single column, left-aligned labels, 16px inputs.
+Field-level errors: red text + red field border, message under the field.
+Cancel (ghost, left) · Save (filled accent, right).
+
+Never: zebra stripes · box around a row/card · shadow to fake depth ·
+hero type inside app screens · centred numeric columns · decorative colour ·
+icon-button row per row.
 
 ## Verify — mandatory after EVERY UI change
 

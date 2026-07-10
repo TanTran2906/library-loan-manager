@@ -12,16 +12,51 @@
         <result property="createdAt" column="created_at"/>
     </resultMap>
 
-    <select id="findAll" resultMap="bookResultMap">
-        SELECT id, title, author, isbn, published_year, total_copies, created_at
-        FROM book
+    <!--
+      One query: book row + an aggregated subquery of its own active loans, so
+      availability and overdue status come back without a per-row DB call.
+    -->
+    <resultMap id="bookSummaryResultMap" type="com.example.library.dto.BookSummary">
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long"/>
+            <arg column="title" javaType="java.lang.String"/>
+            <arg column="author" javaType="java.lang.String"/>
+            <arg column="isbn" javaType="java.lang.String"/>
+            <arg column="total_copies" javaType="_int"/>
+            <arg column="available_copies" javaType="_int"/>
+            <arg column="status" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+
+    <select id="findAll" resultMap="bookSummaryResultMap">
+        SELECT b.id, b.title, b.author, b.isbn, b.total_copies,
+               b.total_copies - COALESCE(loan_stats.active_count, 0) AS available_copies,
+               CASE
+                   WHEN COALESCE(loan_stats.overdue_count, 0) > 0 THEN 'overdue'
+                   WHEN b.total_copies - COALESCE(loan_stats.active_count, 0) &lt;= 0 THEN 'on-loan'
+                   ELSE 'available'
+               END AS status
+        FROM book b
+        LEFT JOIN (
+            SELECT book_id,
+                   COUNT(*) AS active_count,
+                   SUM(CASE WHEN due_at &lt; #{today} THEN 1 ELSE 0 END) AS overdue_count
+            FROM loan
+            WHERE returned_at IS NULL
+            GROUP BY book_id
+        ) loan_stats ON loan_stats.book_id = b.id
         <where>
             <if test="keyword != null and keyword != ''">
-                AND (title LIKE CONCAT('%', #{keyword}, '%')
-                     OR author LIKE CONCAT('%', #{keyword}, '%'))
+                AND (b.title LIKE CONCAT('%', #{keyword}, '%')
+                     OR b.author LIKE CONCAT('%', #{keyword}, '%'))
             </if>
         </where>
-        ORDER BY title
+        ORDER BY b.title
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*)
+        FROM book
     </select>
 
     <select id="findById" resultMap="bookResultMap">

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Library</title>
+    <link rel="stylesheet" th:href="@{/css/tokens.css}"/>
+    <link rel="stylesheet" th:href="@{/css/primitives.css}"/>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body>
+<main data-page="home">
+    <section data-hero>
+        <h1>Every book, accounted for.</h1>
+
+        <div data-stats>
+            <article class="card">
+                <p data-stat-value th:text="${stats.totalBooks}">25</p>
+                <p data-stat-label>Books in the collection</p>
+            </article>
+            <article class="card">
+                <p data-stat-value th:text="${stats.onLoan}">7</p>
+                <p data-stat-label>On loan</p>
+            </article>
+            <article class="card">
+                <p data-stat-value
+                   th:attr="data-state=${stats.overdue > 0 ? 'overdue' : null}"
+                   th:text="${stats.overdue}">3</p>
+                <p data-stat-label>Overdue</p>
+            </article>
+        </div>
+
+        <a class="btn" data-variant="primary" th:href="@{/books}" href="/books">Browse the catalogue</a>
+    </section>
+</main>
+</body>
+</html>

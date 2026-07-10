@@ -44,4 +44,18 @@ public class LoanRow {
     public boolean isOverdue() {
         return overdue;
     }
+
+    public String getStatus() {
+        if (returnedAt != null) {
+            return "available";
+        }
+        return overdue ? "overdue" : "on-loan";
+    }
+
+    public String getStatusLabel() {
+        if (returnedAt != null) {
+            return "Returned";
+        }
+        return overdue ? "Overdue" : "On loan";
+    }
 }

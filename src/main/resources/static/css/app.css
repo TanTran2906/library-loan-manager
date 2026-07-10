@@ -1,0 +1,284 @@
+/* ==========================================================================
+   app.css — screen composition (4th layer). Element + data-* selectors only;
+   never a new class. Every value is a token. Primitives do the components;
+   this file only lays them out and sets page-level type.
+   ========================================================================== */
+
+@layer reset, tokens, primitives, app;
+
+/* Minimal reset — lives at the reset layer regardless of file load order. */
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  h1,
+  p {
+    margin: 0;
+  }
+}
+
+@layer app {
+
+  /* Base -------------------------------------------------------------- */
+  body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--text-primary);
+    background: var(--surface-0);
+  }
+
+  /* Hero (/) — the only screen with drama. One positioning line, three
+     live stats (data as the hero), one CTA. -------------------------- */
+  [data-page="home"] {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    padding: var(--space-7) var(--space-4);
+  }
+
+  [data-hero] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+    width: 100%;
+    max-width: 56rem;
+    text-align: center;
+  }
+
+  [data-hero] h1 {
+    max-width: 16ch;
+    font-family: var(--font-display);
+    font-weight: var(--weight-light);
+    font-size: clamp(calc(var(--text-base) * 3), 7vw, var(--text-display));
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    text-wrap: balance;
+  }
+
+  /* Three stats — a responsive grid of primitive cards. */
+  [data-stats] {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    width: 100%;
+  }
+
+  [data-page="home"] .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  [data-stat-value] {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-none);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
+  }
+
+  /* Red only when something is wrong. */
+  [data-stat-value][data-state="overdue"] {
+    color: var(--state-overdue);
+  }
+
+  [data-stat-label] {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  /* Stack the stats below the tablet breakpoint. */
+  @media (max-width: 40rem) {
+    [data-stats] {
+      grid-template-columns: 1fr;
+    }
+
+    [data-hero] {
+      gap: var(--space-5);
+    }
+  }
+
+  /* Site chrome (/books, /books/{id}) — the hero has no header/footer of its
+     own; it IS the landing splash. Pin the footer to the bottom on short
+     pages via :has(), no JS. ------------------------------------------- */
+  body:has([data-page="books-list"]),
+  body:has([data-page="books-detail"]) {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  [data-app-header] {
+    display: flex;
+    align-items: center;
+    height: var(--size-toolbar);
+    padding-inline: var(--space-6);
+    border-bottom: var(--border-thin) solid var(--border-color);
+  }
+
+  [data-app-header] a {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-regular);
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  [data-app-header] a:focus-visible {
+    outline: var(--border-thick) solid var(--accent);
+    outline-offset: var(--focus-offset);
+  }
+
+  [data-app-footer] {
+    padding: var(--space-5) var(--space-6);
+    text-align: center;
+    border-top: var(--border-thin) solid var(--border-color);
+  }
+
+  [data-app-footer] p {
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+
+  /* Shared app-screen container ----------------------------------------- */
+  [data-page="books-list"],
+  [data-page="books-detail"] {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    width: 100%;
+    max-width: 64rem;
+    margin-inline: auto;
+    padding: var(--space-6) var(--space-4);
+  }
+
+  [data-page-title] {
+    font-family: var(--font-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--text-lg);
+    color: var(--text-primary);
+  }
+
+  /* List (/books) --------------------------------------------------------- */
+  [data-toolbar] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    height: var(--size-toolbar);
+  }
+
+  [data-toolbar] [data-search] {
+    flex: 1;
+    max-width: 24rem;
+  }
+
+  /* Title cell carries two lines (title + muted author), so the fixed
+     40px row height gives way to a comfortable min-height here. */
+  [data-page="books-list"] .table tbody td {
+    height: auto;
+    min-height: var(--size-row);
+    padding-block: var(--space-2);
+  }
+
+  [data-page="books-list"] td[data-cell="title"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  [data-page="books-list"] td[data-cell="title"] a {
+    font-weight: var(--weight-medium);
+  }
+
+  [data-page="books-list"] td[data-cell="title"] [data-muted] {
+    font-size: var(--text-xs);
+  }
+
+  /* Detail (/books/{id}) --------------------------------------------------- */
+  [data-page="books-detail"] > .btn {
+    align-self: flex-start;
+  }
+
+  [data-book-header] {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  [data-book-heading] {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  [data-book-heading] h1 {
+    font-family: var(--font-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--text-xl);
+    line-height: var(--leading-snug);
+  }
+
+  [data-book-heading] [data-muted] {
+    font-size: var(--text-base);
+    color: var(--text-muted);
+  }
+
+  [data-facts] {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 24rem;
+    margin: 0;
+  }
+
+  [data-facts] > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-block: var(--space-2);
+    border-bottom: var(--border-thin) solid var(--border-color);
+  }
+
+  [data-facts] dt {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  [data-facts] dd {
+    margin: 0;
+    font-size: var(--text-base);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
+  }
+
+  [data-loans] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  [data-loans] h2 {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+  }
+}

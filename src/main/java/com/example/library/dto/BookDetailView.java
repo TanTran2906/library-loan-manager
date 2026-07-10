@@ -11,10 +11,11 @@ public class BookDetailView {
     private final Integer publishedYear;
     private final int totalCopies;
     private final int availableCopies;
+    private final String status;
     private final List<LoanRow> loans;
 
     public BookDetailView(Long id, String title, String author, String isbn, Integer publishedYear,
-                           int totalCopies, int availableCopies, List<LoanRow> loans) {
+                           int totalCopies, int availableCopies, String status, List<LoanRow> loans) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -22,6 +23,7 @@ public class BookDetailView {
         this.publishedYear = publishedYear;
         this.totalCopies = totalCopies;
         this.availableCopies = availableCopies;
+        this.status = status;
         this.loans = loans;
     }
 
@@ -51,6 +53,21 @@ public class BookDetailView {
 
     public int getAvailableCopies() {
         return availableCopies;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getStatusLabel() {
+        switch (status) {
+            case "overdue":
+                return "Overdue";
+            case "on-loan":
+                return "On loan";
+            default:
+                return "Available";
+        }
     }
 
     public List<LoanRow> getLoans() {

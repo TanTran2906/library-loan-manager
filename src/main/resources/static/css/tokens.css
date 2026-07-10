@@ -1,0 +1,140 @@
+/* ==========================================================================
+   tokens.css — the ONLY place raw hex / px / ms values are allowed.
+   Design spec locked 2026-07-10 (Refero audit): editorial ledger, not a
+   dashboard. One dominant ink + one accent. Warm-paper neutrals. Two fonts.
+   Cascade order is declared here (first-loaded file) for all layers.
+   ========================================================================== */
+
+@layer reset, tokens, primitives, app;
+
+@layer tokens {
+  :root {
+    /* ---------------------------------------------------------------------
+       FONTS — exactly two families (self-host woff2). Generic keyword is the
+       only fallback: no system-ui stacks (forbidden).
+       --------------------------------------------------------------------- */
+    --font-display: "Fraunces", serif;        /* hero + page titles ONLY */
+    --font-body: "IBM Plex Sans", sans-serif; /* UI + table; real tabular figures */
+
+    /* ---------------------------------------------------------------------
+       COLOUR — neutral ramp 50–900 (warm paper, not cool grey)
+       --------------------------------------------------------------------- */
+    --neutral-50:  #faf7f1;
+    --neutral-100: #f2eee4;
+    --neutral-200: #e6e0d3;  /* hairline dividers / default border */
+    --neutral-300: #d3cbba;  /* control / input border */
+    --neutral-400: #aea48d;
+    --neutral-500: #7c7259;  /* muted meta text */
+    --neutral-600: #5c5443;  /* secondary text */
+    --neutral-700: #443e32;
+    --neutral-800: #2b2820;
+    --neutral-900: #1e1b15;  /* ink */
+
+    /* DOMINANT — warm-neutral ink (never #000) */
+    --ink: var(--neutral-900);
+
+    /* ACCENT — one editorial blue. CTA + focus ring ONLY. Distinct from every
+       semantic hue so state colour is never confused with brand colour. */
+    --accent:          #2a5a87;
+    --accent-hover:    #204869;
+    --accent-contrast: #fcfaf5;  /* text on accent */
+    --accent-soft:     #e4edf4;  /* faint selected/focus tint */
+
+    /* SEMANTIC — badge / text only. Red appears only when something is wrong. */
+    --state-available:    #2f6b3f;
+    --state-available-bg: #e3ede1;
+    --state-on-loan:      #5c5443;
+    --state-on-loan-bg:   #ebe5d8;
+    --state-overdue:      #a83227;
+    --state-overdue-bg:   #f5e2dd;
+
+    /* TEXT roles */
+    --text-primary:   var(--ink);
+    --text-secondary: var(--neutral-600);
+    --text-muted:     var(--neutral-500);
+    --text-on-accent: var(--accent-contrast);
+
+    /* ---------------------------------------------------------------------
+       SURFACES — 4 levels. Elevation by contrast, never by shadow.
+       --------------------------------------------------------------------- */
+    --surface-0: #f3eee4;  /* app canvas (warm off-white) */
+    --surface-1: #fcfaf5;  /* table / card — lifts above canvas */
+    --surface-2: #efe9dc;  /* hover row */
+    --surface-3: #e9e2d3;  /* sunken: table header, toolbar */
+
+    /* ---------------------------------------------------------------------
+       BORDERS
+       --------------------------------------------------------------------- */
+    --border-thin:    1px;               /* hairline rows/dividers */
+    --border-thick:   2px;               /* focus ring / invalid field */
+    --border-color:   var(--neutral-200);
+    --border-strong:  var(--neutral-300);
+    --focus-offset:   2px;
+
+    /* ---------------------------------------------------------------------
+       SPACING — 8px rhythm with a 4px sub-grid for tables
+       --------------------------------------------------------------------- */
+    --space-1: 0.25rem;  /*  4px — table sub-grid */
+    --space-2: 0.5rem;   /*  8px — base unit */
+    --space-3: 0.75rem;  /* 12px — cell horizontal padding */
+    --space-4: 1rem;     /* 16px */
+    --space-5: 1.5rem;   /* 24px — block gap (app screens) */
+    --space-6: 2rem;     /* 32px — card padding / block gap */
+    --space-7: 3rem;     /* 48px — toolbar / hero rhythm */
+    --space-8: 4rem;     /* 64px — hero sections */
+    --space-9: 6rem;     /* 96px — hero sections (max) */
+
+    /* SIZING — component heights derived from the 8px rhythm (so primitives
+       never need a raw px). */
+    --size-row:        2.5rem;  /* 40px table row */
+    --size-row-header: 2rem;    /* 32px header row */
+    --size-control:    2.5rem;  /* 40px input / button height */
+    --size-toolbar:    3rem;    /* 48px */
+
+    /* ---------------------------------------------------------------------
+       TYPE SCALE — 3.5× jump from body (1rem) to display (3.5rem).
+       Drama only in the hero; app screens sit in the 0.75–2rem band.
+       --------------------------------------------------------------------- */
+    --text-xs:      0.75rem;    /* 12px — timestamps, muted meta */
+    --text-sm:      0.8125rem;  /* 13px — TABLE BODY default */
+    --text-base:    1rem;       /* 16px — form inputs, detail body */
+    --text-lg:      1.5rem;     /* 24px — list / section titles */
+    --text-xl:      2rem;       /* 32px — detail page title */
+    --text-display: 3.5rem;     /* 56px — HERO ONLY */
+
+    --leading-none:   1;
+    --leading-tight:  1.1;   /* display */
+    --leading-snug:   1.25;  /* titles */
+    --leading-normal: 1.5;   /* body */
+
+    --weight-light:    300;  /* hero display only — never in a table */
+    --weight-regular:  400;
+    --weight-medium:   500;
+    --weight-semibold: 600;
+    --weight-bold:     700;
+
+    --tracking-tight: -0.02em;  /* large display serif */
+
+    /* ---------------------------------------------------------------------
+       SHADOW — exactly one, two-layer. Floating layers only
+       (<dialog>, popover, toast). Never to fake depth on static content.
+       --------------------------------------------------------------------- */
+    --shadow-float:
+      0 1px 2px rgba(30, 27, 21, 0.10),
+      0 10px 24px -6px rgba(30, 27, 21, 0.14);
+
+    /* ---------------------------------------------------------------------
+       RADIUS
+       --------------------------------------------------------------------- */
+    --radius-sm: 4px;   /* badges, inputs */
+    --radius-md: 8px;   /* buttons, cards */
+    --radius-lg: 12px;  /* dialogs / large panels */
+
+    /* ---------------------------------------------------------------------
+       TRANSITIONS
+       --------------------------------------------------------------------- */
+    --duration-fast: 120ms;
+    --duration-base: 200ms;
+    --ease: cubic-bezier(0.2, 0, 0, 1);
+  }
+}

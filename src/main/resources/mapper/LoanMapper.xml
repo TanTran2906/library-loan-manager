@@ -39,4 +39,17 @@
         ORDER BY l.borrowed_at DESC
     </select>
 
+    <select id="countOnLoan" resultType="long">
+        SELECT COUNT(*)
+        FROM loan
+        WHERE returned_at IS NULL
+    </select>
+
+    <select id="countOverdue" resultType="long">
+        SELECT COUNT(*)
+        FROM loan
+        WHERE returned_at IS NULL
+          AND due_at &lt; #{today}
+    </select>
+
 </mapper>
