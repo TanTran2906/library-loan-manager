@@ -1,0 +1,8 @@
+<dependency> spring-boot-starter-web </dependency>
+<dependency> spring-boot-starter-thymeleaf </dependency>
+<dependency> spring-boot-starter-validation </dependency>
+<dependency> spring-boot-devtools (runtime, optional) </dependency>
+<dependency> org.mybatis.spring.boot:mybatis-spring-boot-starter:3.x </dependency>
+<dependency> com.mysql:mysql-connector-j (runtime) </dependency>
+<dependency> org.flywaydb:flyway-core </dependency>
+<dependency> org.flywaydb:flyway-mysql </dependency>

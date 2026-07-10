@@ -1,0 +1,21 @@
+CREATE TABLE book (
+ id BIGINT AUTO_INCREMENT PRIMARY KEY,
+ title VARCHAR(255) NOT NULL,
+ author VARCHAR(160) NOT NULL,
+ isbn VARCHAR(20) NOT NULL UNIQUE,
+ published_year SMALLINT,
+ total_copies INT NOT NULL DEFAULT 1,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE member (...);
+CREATE TABLE loan (
+ id BIGINT AUTO_INCREMENT PRIMARY KEY,
+ book_id BIGINT NOT NULL,
+ member_id BIGINT NOT NULL,
+ borrowed_at DATE NOT NULL,
+ due_at DATE NOT NULL,
+ returned_at DATE NULL,
+ CONSTRAINT fk_loan_book FOREIGN KEY (book_id) REFERENCES book(id),
+ CONSTRAINT fk_loan_member FOREIGN KEY (member_id) REFERENCES member(id),
+ INDEX idx_loan_book (book_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
